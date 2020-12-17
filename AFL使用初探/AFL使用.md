@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 }
 ```
 
-## 目标程序处理
+### 有源码目标程序处理
 
 对目标程序进行编译插桩生成测试文件：
 
@@ -54,11 +54,34 @@ afl-gcc -g -o test test.c
 
 建立文件夹 fuzz_in/testcase & fuzz_out 用来存放程序的输入和fuzz的输出结果
 
- 输入命令：```afl-fuzz -i fuzz_in -o fuzz_out ./test ```
+ ```
+afl-fuzz -i fuzz_in -o fuzz_out ./test
+ ```
 
 从fuzz_in中读取输入，输出放入fuzz_out中，test为刚刚得到的插桩后的待fuzz程序
 
-## 常见命令行参数整理
+### 无源码目标程序处理
+
+无源码程序则不能使用afl进行插桩，可以使用afl中的qemu模式进行测试，开启方式：
+
+```
+./qemu_mode/build_qemu_support.sh
+make install
+```
+
+对目标程序使用gcc进行编译生成测试用例：
+
+```
+gcc -g -o test test.c  
+```
+
+测试无源码程序指令：
+
+```
+afl-fuzz -i fuzz_in -o fuzz_out -Q ./afl_test2
+```
+
+### 常见命令行参数整理
 
 - -f ：testcase的内容会作为afl_test的stdin
 - -m ：表示分配的内存空间
@@ -69,19 +92,19 @@ afl-gcc -g -o test test.c
 - -M ：运行主(Master) Fuzzer
 - -S ：运行从属(Slave) Fuzzer
 
-## 报错
+### 报错处理
 
 Sad-上来直接一个报错
 
- ![Photos/image-20201216152615297.png](Photos/image-20201216152615297.png)
+ ![Photos/image-20201216152615297.png](.images/image-20201216152615297.png)
 
 不过C程序直接看源码也好理解：原来是测试文件得加‘/’
 
- ![Photos/image-20201216153522647](Photos/image-20201216153522647.png)
+ ![Photos/image-20201216153522647](.images/image-20201216153522647.png)
 
 ## Run
 
-![Photos/image-20201216153704491](Photos/image-20201216153704491.png)
+![Photos/image-20201216153704491](.images/image-20201216153704491.png)
 
 ### 板块介绍
 
@@ -93,16 +116,16 @@ Ctrl + c 退出进程开始分析crash吧
 
 1. 符合栈溢出漏洞
 
- ![Photos/image-20201216164610993](Photos/image-20201216164610993.png)
+ ![Photos/image-20201216164610993](.images/image-20201216164610993.png)
 
 2. 符合首字符为‘A’，字符长度为66的crash 
 
- ![Photos/image-20201216164823575](Photos/image-20201216164823575.png)
+ ![Photos/image-20201216164823575](.images/image-20201216164823575.png)
 
 3. 符合首字符为‘F’，字符长度为6的crash
 
- ![Photos/image-20201216165120451](Photos/image-20201216165120451.png)
+ ![Photos/image-20201216165120451](.images/image-20201216165120451.png)
 
 4. %n格式化字符串漏洞 
 
- ![Photos/image-20201216165749972](Photos/image-20201216165749972.png)
+ ![Photos/image-20201216165749972](.images/image-20201216165749972.png)
